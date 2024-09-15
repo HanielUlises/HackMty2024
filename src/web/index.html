@@ -1,13 +1,82 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main Page</title>
-    <link rel = "stylesheet" href="styles.css" >
+    <title>Coding Challenge Platform</title>
+
+    <!-- Include Alpine.js -->
+    <script src="https://unpkg.com/alpinejs" defer></script>
+
+    <!-- Include Monaco Editor -->
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.33.0/min/vs/loader.js"></script>
+
+    <!-- Link to CSS -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>
+    <div x-data="{ open: true }" x-init="$nextTick(() => {
+        document.querySelector('.app-container').classList.remove('no-transition');
+        document.querySelector('.editor-container').classList.remove('no-transition');
+    })" class="app-container no-transition" style="display: flex;">
+        
+        <!-- Mini Sidebar -->
+        <div class="mini-sidebar" :class="{ 'shrunk': !open }">
+            <button @click="open = true" x-show="!open" class="retoggle-btn">
+                <img src="icons/menu-icon.svg" alt="Icon">
+            </button>
+        </div>
 
-    </h1>
+        <!-- Sidebar -->
+        <div class="sidebar" :class="{ 'hidden': !open }">
+            <button @click="open = !open" class="toggle-btn">
+                <img src="icons/close-icon.svg" alt="Icon">
+            </button>
+
+            <h2>Navigation</h2>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/exercise">Start Exercise</a></li>
+                    <li><a href="/about">About</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-container">
+            <!-- Col 1: Code Explanation -->
+            <div class="columnExplanation">
+                <header>
+                    <h1>Coding Challenge</h1>
+                    <p>Solve coding exercises, submit your solutions, and get instant feedback.</p>
+                </header>
+            </div>
+
+            <main>
+                <!-- Language selector -->
+                <div class="language-selector">
+                    <label for="language">Choose Language: </label>
+                    <div class="dropdown-button-container">
+                        <select id="language" onchange="changeLanguage()">
+                            <option value="javascript">JavaScript</option>
+                            <option value="python">Python</option>
+                            <option value="html">HTML</option>
+                            <option value="css">CSS</option>
+                            <option value="cpp">C++</option>
+                            <option value="plaintext">Plain Text</option>
+                        </select>
+                        <button id="Submit" class="submit-btn">Submit</button>
+                    </div>
+                </div>
+
+                <!-- Code Editor -->
+                <section id="editor" class="editor-container"></section>
+            </main>
+        </div>
+    </div>
+
+        
+    <script src="app.js" defer></script>
 </body>
 </html>
