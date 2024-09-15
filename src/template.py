@@ -1,30 +1,35 @@
+from flask import Flask, render_template, request, jsonify
 from openai import OpenAI
 
 client = OpenAI(
-    api_key="-", 
-    base_url="http://198.145.126.109.nip.io/v1" 
+    api_key="-",
+    base_url="http://198.145.126.109:8080/v1"
 )
 
-# Description process for the openAI model
-response = client.chat.completions.create(
-    model="tgi",
-    messages=[
-        # System role: Sets the assistant's behavior
-        {"role": "system", "content": "You are a helpful assistant."},
+app = Flask(__name__)
 
-        # User asks a question
-        {"role": "user", "content": "Who won the World Series in 2020?"},
+@app.route('/')
+def index():
+    return render_template('index.html')
 
-        # Assistant responds to the user's question
-        {"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."},
+# Route for code review processing
+@app.route('/review-code', methods=['POST'])
+def review_code():
+    data = request.get_json()
+    guideline_code = data.get("guideline_code")
+    user_code = data.get("user_code")
 
-        # User continues with a follow-up question
-        {"role": "user", "content": "Where was it played?"},
+    # API call for our code review purposes
+    response = client.chat.completions.create(
+        model="tgi",
+        messages=[
+            {"role": "system", "content": "You are a coding assistant that reviews code based on guidelines."},
+            {"role": "user", "content": f"Guideline code:\n{guideline_code}"},
+            {"role": "user", "content": f"User code:\n{user_code}"},
+            {"role": "user", "content": "Please review the user's code and provide feedback."}
+        ]
+    )
+    return jsonify(response)
 
-        # Assistant provides the answer to the follow-up question
-        {"role": "assistant", "content": "The 2020 World Series was played at Globe Life Field in Arlington, Texas."}
-    ],
-    stream=True
-)
-
-print(response)
+if __name__ == '__main__':
+    app.run(debug=True)

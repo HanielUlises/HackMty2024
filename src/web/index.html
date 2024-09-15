@@ -1,13 +1,20 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main Page</title>
-    <link rel = "stylesheet" href="styles.css" >
+    <title>Code Review Results</title>
+    <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
-    <h1>
+    <h1>Review Results</h1>
+    <div id="results"></div>
 
-    </h1>
+    <script>
+        window.onload = function() {
+            const reviewResult = JSON.parse(sessionStorage.getItem('reviewResult'));
+            document.getElementById('results').innerText = JSON.stringify(reviewResult, null, 2);
+        };
+    </script>
 </body>
 </html>
