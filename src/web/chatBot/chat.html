@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+
+    <!-- Include Alpine.js -->
+    <script src="https://unpkg.com/alpinejs" defer></script>
+
+    <!-- Link to your CSS file -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div x-data="{ open: true }" class="app-container" style="display: flex;">
+        
+        <!-- Mini Sidebar -->
+        <div class="mini-sidebar" :class="{ 'shrunk': !open }">
+            <button @click="open = true" x-show="!open" class="retoggle-btn">
+                <img src="icons/menu-icon.svg" alt="Menu Icon" /> <!-- Add an icon for the menu button -->
+            </button>
+        </div>
+
+        <!-- Full Sidebar -->
+        <div class="sidebar" :class="{ 'hidden': !open }">
+            <button @click="open = !open" class="close-btn">
+                <img src="icons/close-icon.svg" alt="Close Icon" /> <!-- Add an icon for closing the sidebar -->
+            </button>
+            <h2>Chatbot Menu</h2>
+            <nav>
+                <ul>
+                    <li><a href="../evaluation.html">Home</a></li>
+                    <li><a href="chat.html">Chat</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Main Chatbot Container -->
+        <div class="main-container">
+            <div class="chat-container">
+                <h1>Chatbot</h1>
+                <div class="chat-box" id="chat-box">
+                    <!-- Chat messages will be displayed here -->
+                </div>
+                <input type="text" id="user-input" placeholder="Type a message..." onkeydown="if(event.key === 'Enter') sendMessage()">
+                <button class="submit-btn" onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/chatbot.js"></script> <!-- Link to your JS file -->
+</body>
+</html>
+
