@@ -1,0 +1,115 @@
+/* Global Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    background-color: #7987cb;
+    color: #333;
+    display: flex;
+    justify-content: center; /* Centering content horizontally */
+    align-items: center; /* Centering content vertically */
+    min-height: 100vh; /* Full viewport height */
+}
+
+h1, h2 {
+    color: #444;
+    text-align: center; /* Center titles */
+}
+
+/* App Container */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 90%; /* Responsive width */
+    max-width: 960px; /* Maximum width */
+    background: rgb(92, 117, 190); /* Background color for the app area */
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    border-radius: 8px; /* Rounded corners */
+}
+
+/* Mini Sidebar */
+.mini-sidebar {
+    background-color: #2c3e50;
+    width: 60px; /* Fixed width */
+    height: 100%; /* Full height relative to parent */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    padding-top: 10px;
+}
+
+/* Sidebar */
+.sidebar {
+    background-color: #34495e;
+    width: 250px; /* Fixed width */
+    transition: all 0.3s ease-in-out;
+    overflow: hidden; /* Hide content when width is 0 */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center content */
+}
+
+.sidebar.hidden {
+    width: 0;
+    opacity: 0;
+}
+
+/* Main Container */
+.main-container {
+    flex-grow: 1;
+    margin-left: 20px; /* Spacing from sidebar */
+    padding: 20px;
+    overflow: auto; /* Enables scrolling */
+}
+
+/* Styling for buttons and interactive elements */
+button, .toggle-btn, .retoggle-btn, .submit-btn {
+    background-color: #34495e;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    width: auto; /* Auto width based on content */
+    margin: 5px; /* Margin for spacing */
+    transition: background-color 0.3s; /* Smooth transition for hover */
+}
+
+button:hover, .toggle-btn:hover, .retoggle-btn:hover, .submit-btn:hover {
+    background-color: #2980b9; /* Change color on hover */
+}
+
+/* Language Selector */
+.language-selector select {
+    background-color: #34495e; /* Dark background */
+    color: white;
+    border: 1px solid #2c3e50; /* Slight border */
+    padding: 10px;
+    width: 100%; /* Full width */
+    cursor: pointer;
+    appearance: none; /* Remove default styling */
+    background-image: url('icons/drop-down-arrow-white.svg'); /* Custom arrow */
+    background-repeat: no-repeat;
+    background-position: right 10px center; /* Position custom arrow */
+}
+
+/* Responsive Layout Adjustments */
+@media (max-width: 768px) {
+    .app-container {
+        flex-direction: column;
+        align-items: stretch; /* Stretch to full width */
+    }
+
+    .sidebar, .mini-sidebar {
+        width: 100%; /* Full width for small screens */
+        height: auto; /* Adjust height */
+    }
+
+    .main-container {
+        margin-left: 0; /* No margin on small screens */
+    }
+}

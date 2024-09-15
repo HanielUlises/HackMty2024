@@ -3,6 +3,10 @@ from SummarizeCompany import Client
 from SummarizeCompany import SummarizeCompany
 import data_base_handler as dbh
 from sentence_transformers import SentenceTransformer
+from transformers import AutoTokenizer, AutoModelForCausalLM
+
+tokenizer = AutoTokenizer.from_pretrained("ibm/PowerLM-3b")
+model = AutoModelForCausalLM.from_pretrained("ibm/PowerLM-3b")
 
 class JobTrainer:
     def __init__(self):
@@ -11,6 +15,9 @@ class JobTrainer:
         self.index = conections.index
         self.mongo = conections.mongo
         self.model = SentenceTransformer('sentence-transformers/paraphrase-MiniLM-L6-v2')
+
+        self.tokenizer = AutoTokenizer.from_pretrained("ibm/PowerLM-3b")
+        self.lm_model = AutoModelForCausalLM.from_pretrained("ibm/PowerLM-3b")
 
     def review_code(self, guideline_code, user_code):
         """Review the provided user code against guideline code and provide analysis."""
@@ -36,18 +43,20 @@ class JobTrainer:
             return f"Error during code review: {str(e)}"
 
     def generate_problem(self, context, prompt):
-        """Generate a problem for a new employee based on the context."""
+        """Generate a problem for a new employee based on the context using PowerLM-3b."""
         try:
-            response = self.client.chat.completions.create(
-                model="tgi",
-                messages=[
-                    {"role": "system", "content": prompt + context + 
-                    " Tell me what problem you would give to the new employee. And list each potential guideline that the code must meet."}
-                ],
-                max_tokens=500,
-                stream=False
-            )
-            problem = response.choices[0].message.content
+            # Combine the context and prompt
+            input_text = prompt + context + " Tell me what problem you would give to the new employee. And list each potential guideline that the code must meet."
+            
+            # Tokenize the input text
+            inputs = self.tokenizer(input_text, return_tensors="pt")
+
+            # Generate the response from the model
+            outputs = self.lm_model.generate(**inputs, max_length=500, do_sample=True, temperature=0.7)
+
+            # Decode the generated tokens back into a string
+            problem = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
+
             return problem
 
         except Exception as e:
@@ -111,9 +120,6 @@ if __name__ == '__main__':
 
     train = SummarizeCompany()
     
-    # Here you can define the context, it can come from the request or be hardcoded
-    # Promt de reconocimiento de patrones 
-    # #You are a pattern detection specialist. You have to find patterns in the following text:"
     context = train.relevantIdeas("You are a text analyst. You have to extract the main ideas from the following text:")
     
     trainer = JobTrainer()
@@ -151,4 +157,3 @@ if __name__ == '__main__':
     print(guideline_code)
     print("\nReview Result:")
     print(review)
-

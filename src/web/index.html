@@ -7,9 +7,10 @@
 
     <!-- Include Alpine.js for interactivity -->
     <script src="https://unpkg.com/alpinejs" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.33.0/min/vs/loader.js"></script>
 
     <!-- Link to CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='evaluation_styles.css') }}">
+    <link rel="stylesheet" href="../static/evaluation_styles.css">
 </head>
 <body>
     <div x-data="{ openMenu: false }" class="landing-page-container">
@@ -96,6 +97,6 @@
     </div>
 
     <!-- Include external JavaScript files -->
-    <script src="{{ url_for('static', filename='landing.js') }}"></script>
+    <script src="../static/landing.js"></script>
 </body>
 </html>
