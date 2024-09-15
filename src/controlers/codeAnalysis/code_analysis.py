@@ -1,18 +1,22 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Blueprint, render_template, request, jsonify
 from openai import OpenAI
 
+# Initialize OpenAI client
 client = OpenAI(
-    api_key="-",
+    api_key="-",  # Replace with your actual API key
     base_url="http://198.145.126.109:8080/v1"
 )
 
-app = Flask(__name__)
+# Create the analysis blueprint
+analysis_bp = Blueprint('analysis', __name__, template_folder="../../web/analysis")
 
-@app.route('/')
+# Route to serve the HTML file
+@analysis_bp.route('/')
 def index():
-    return render_template('results/analysis.html')
+    return render_template('analysis.html')
 
-@app.route('/review-code', methods=['POST'])
+# Route to handle POST requests for code review
+@analysis_bp.route('/review-code', methods=['POST'])
 def review_code():
     data = request.get_json()
     if not data:
@@ -25,9 +29,8 @@ def review_code():
         return jsonify({"error": "Missing 'guideline_code' or 'user_code'"}), 400
 
     try:
-        # First API Call: Evaluate code outputs
         response_interpret = client.chat.completions.create(
-            model="tgi",  # Retained as per your instruction
+            model="tgi",
             messages=[
                 {"role": "system", "content": "Compare the following two pieces of code and evaluate their outputs."},
                 {"role": "user", "content": f"Guideline Code:\n{guideline_code}"},
@@ -35,16 +38,9 @@ def review_code():
                 {"role": "user", "content": "First, run both codes and compare their outputs. If the outputs are the same, return 1, if not, return 0."}
             ]
         )
-        
-        # Log the entire response object to understand its structure
-        print("Response from API:", response_interpret)
 
-        # Return the response as JSON
-        return jsonify({"response": response_interpret})
+        completion_text = response_interpret.choices[0].message.content
+        return jsonify({"response": completion_text})
 
     except Exception as e:
-        print(f"Error during API request: {e}")
         return jsonify({"error": str(e)}), 500
-
-if __name__ == '__main__':
-    app.run(debug=True)

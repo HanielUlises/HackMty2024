@@ -18,15 +18,15 @@ class JobTrainer:
             ],stream=False
         )
         problem=response.choices[0].message.content
-        print(problem)
+        return problem
 
         
-if __name__ == '__main__':
-    uri = dbh.DATA_BASE_URI
+# if __name__ == '__main__':
+#     uri = dbh.DATA_BASE_URI
 
-    check_conect=dbh.connect_to_company_information(uri)
+#     check_conect=dbh.connect_to_company_information(uri)
 
-    train = SummarizeCompany()
-    context = train.relevantIdeas("You are a text analyst. You have to extract the main ideas from the following text:")
-    trainer = JobTrainer()
-    trainer.generateProblem(context)
+#     train = SummarizeCompany()
+#     context = train.relevantIdeas("You are a text analyst. You have to extract the main ideas from the following text:")
+#     trainer = JobTrainer()
+#     trainer.generateProblem(context)

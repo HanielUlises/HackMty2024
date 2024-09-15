@@ -3,18 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Code Review Results</title>
-    <link rel="stylesheet" href="../../styles.css">
+    <title>Code Comparison</title>
 </head>
 <body>
-    <h1>Review Results</h1>
-    <div id="results"></div>
+    <h1>Code Comparison Tool</h1>
 
+    <!-- Form to input guideline code and user code -->
+    <form id="codeForm">
+        <label for="guideline_code">Guideline Code:</label><br>
+        <textarea id="guideline_code" name="guideline_code" rows="10" cols="50"></textarea><br>
+
+        <label for="user_code">User Code:</label><br>
+        <textarea id="user_code" name="user_code" rows="10" cols="50"></textarea><br>
+
+        <button type="submit">Compare Codes</button>
+    </form>
+
+    <h2>Comparison Result:</h2>
+    <pre id="result"></pre>
+
+    <!-- Including Axios via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-        window.onload = function() {
-            const reviewResult = JSON.parse(sessionStorage.getItem('reviewResult'));
-            document.getElementById('results').innerText = JSON.stringify(reviewResult, null, 2);
-        };
+        // Reference the form element
+        const form = document.getElementById('codeForm');
+
+        // Add an event listener to handle form submission
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault();  // Prevent default form submission
+
+            // Get values from the form fields
+            const guidelineCode = document.getElementById('guideline_code').value;
+            const userCode = document.getElementById('user_code').value;
+
+            // Simple validation to ensure both fields are filled
+            if (!guidelineCode || !userCode) {
+                alert("Both code fields must be filled out!");
+                return;
+            }
+
+            try {
+                // Send a POST request to the Flask backend using Axios
+                const response = await axios.post('/review-code', {
+                    guideline_code: guidelineCode,
+                    user_code: userCode
+                });
+
+                // Display the result in the pre tag
+                document.getElementById('result').textContent = JSON.stringify(response.data, null, 2);
+            } catch (error) {
+                // Handle any errors that may occur
+                console.error("Error occurred:", error);
+                document.getElementById('result').textContent = `Error: ${error.response?.data?.error || error.message}`;
+            }
+        });
     </script>
 </body>
 </html>

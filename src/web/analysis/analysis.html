@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Comparison</title>
+</head>
+<body>
+    <h1>Code Comparison Tool</h1>
+
+    <!-- Form to input guideline code and user code -->
+    <form id="codeForm">
+        <label for="guideline_code">Guideline Code:</label><br>
+        <textarea id="guideline_code" name="guideline_code" rows="10" cols="50"></textarea><br>
+
+        <label for="user_code">User Code:</label><br>
+        <textarea id="user_code" name="user_code" rows="10" cols="50"></textarea><br>
+
+        <button type="submit">Compare Codes</button>
+    </form>
+
+    <h2>Comparison Result:</h2>
+    <pre id="result"></pre>
+
+    <!-- Include Axios and the custom JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="{{ url_for('static', filename='axios_codeAnalysis.js') }}"></script> <!-- Correctly reference the JS file -->   
+</body>
+</html>

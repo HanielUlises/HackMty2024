@@ -15,8 +15,8 @@ h1, h2 {
     height: 100vh;
     display: flex;
     align-items: stretch;
+    overflow: hidden;
 }
-
 
 /* Mini Sidebar */
 .mini-sidebar {
@@ -33,7 +33,7 @@ h1, h2 {
 }
 
 .mini-sidebar.shrunk {
-    width: 70px; /* Shrink when the sidebar is hidden */
+    width: 60px; /* Shrunk width */
 }
 
 /* Button inside the mini-sidebar */
@@ -123,15 +123,17 @@ h1, h2 {
     flex-grow: 1; /* Grow to fill available space */
     background-color: white;
     padding: 20px;
-    /* overflow: auto; */
+    width: calc(100% - 250px); /* Subtract the width of the sidebar */
+    height: 100vh; /* Full viewport height */
 }
 
 /* Fix the height and width of the editor to prevent expansion */
 .editor-container {
-    width: 100%;
-    height: 500px;
+    width: 100%; /* Prevents the editor from expanding beyond the container */
+    height: 500px; /* Fixed height for the editor */
     border: 1px solid #ccc;
     margin: 20px 0;
+    overflow: hidden; /* Prevent content overflow */
 }
 
 .editor {
@@ -149,11 +151,9 @@ h1, h2 {
     }
 }
 
-main{
+main {
     width: 100%;
 }
-
-
 
 /* Style for the language selector dropdown */
 .language-selector select {
@@ -163,7 +163,7 @@ main{
     border-radius: 4px;         /* Rounded corners like the toggle button */
     padding: 10px;              /* Padding for a comfortable clickable area */
     font-size: 14px;            /* Same font size as toggle button */
-    width: 20%;                /* Make the dropdown take full width */
+    width: 20%;                 /* Make the dropdown take full width */
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Add a slight shadow */
     cursor: pointer;            /* Change cursor to pointer */
     appearance: none;           /* Remove default arrow for cross-browser consistency */
@@ -187,10 +187,8 @@ main{
     margin-right: 10px;         /* Space between label and dropdown */
 }
 
-
-
-
-.submit-btn{
+/* Submit Button */
+.submit-btn {
     background-color: #34495e;
     color: white;
     border: none;
@@ -198,12 +196,170 @@ main{
     border-radius: 4px;
     font-size: 14px;
     cursor: pointer;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);  
-
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-
-.submit-btn:hover{
+.submit-btn:hover {
     background-color: rgb(25, 217, 25);  /* Hover color like sidebar button */
-    
+}
+/* Global Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+h1, h2 {
+    color: #444;
+}
+
+/* App Container */
+.app-container {
+    height: 100vh;
+    display: flex;
+    align-items: stretch;
+    overflow: hidden; /* Prevent content from overflowing */
+}
+
+/* Mini Sidebar */
+.mini-sidebar {
+    width: 60px;
+    background-color: #2c3e50;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 10px 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    height: 100vh;
+    flex-shrink: 0;
+    transition: width 0.3s ease; /* Transition only width */
+}
+
+.mini-sidebar.shrunk {
+    width: 60px; /* Keep it at 60px when shrunk */
+}
+
+/* Sidebar */
+.sidebar {
+    background-color: #34495e;
+    color: white;
+    padding: 20px;
+    width: 250px;
+    transition: width 0.3s ease, opacity 0.3s ease;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+}
+
+.sidebar.hidden {
+    width: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Main Container */
+.main-container {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: white;
+    transition: margin-left 0.3s ease; /* Transition margin for smooth movement */
+    width: calc(100% - 250px); /* Subtract sidebar width */
+    height: 100vh; /* Full height */
+    overflow: hidden; /* Prevent content overflow */
+}
+
+.sidebar.hidden + .main-container {
+    width: 100%; /* When sidebar is hidden, use full width */
+}
+
+/* Editor Container */
+.editor-container {
+    width: 100%;
+    height: 500px;
+    border: 1px solid #ccc;
+    margin: 20px 0;
+    overflow: hidden;
+}
+
+/* Button */
+.retoggle-btn {
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 12px;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+}
+
+.retoggle-btn:hover {
+    background-color: #2980b9;
+}
+
+/* Toggle Button */
+.toggle-btn {
+    background-color: #34495e;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+    align-self: flex-start;
+}
+
+.toggle-btn:hover {
+    background-color: #c0392b;
+}
+
+/* Language Selector */
+.language-selector select {
+    background-color: #34495e;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 14px;
+    width: 20%;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    appearance: none;
+    background-image: url('icons/drop-down-arrow.svg');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
+}
+
+.language-selector select:hover {
+    background-color: #2980b9;
+}
+
+/* Submit Button */
+.submit-btn {
+    background-color: #34495e;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.submit-btn:hover {
+    background-color: rgb(25, 217, 25);
+}
+
+/* Responsive Layout for Mobile */
+@media (max-width: 768px) {
+    .main-container {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .editor-container {
+        margin-top: 20px;
+    }
 }
