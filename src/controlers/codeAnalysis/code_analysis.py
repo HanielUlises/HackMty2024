@@ -3,7 +3,7 @@ from openai import OpenAI
 
 # Initialize OpenAI client
 client = OpenAI(
-    api_key="-",  # Replace with your actual API key
+    api_key="-", # Replace with your actual API key
     base_url="http://198.145.126.109:8080/v1"
 )
 
@@ -32,10 +32,13 @@ def review_code():
         response_interpret = client.chat.completions.create(
             model="tgi",
             messages=[
-                {"role": "system", "content": "Compare the following two pieces of code and evaluate their outputs."},
+                {"role": "system", "content": "Compare the following two pieces of code and evaluate their outputs" + 
+                 "Markup the differences between each "},
                 {"role": "user", "content": f"Guideline Code:\n{guideline_code}"},
                 {"role": "user", "content": f"User Code:\n{user_code}"},
-                {"role": "user", "content": "First, run both codes and compare their outputs. If the outputs are the same, return 1, if not, return 0."}
+                {"role": "user", "content": "First, run both codes and compare their outputs. Consider the guidelines and coding standards that you might" +
+                 " identify from the guideline code and point out what the user code got right in terms of standards and best practices" + 
+                 ", also, what they got wrong and finally what they could improve"}
             ]
         )
 
