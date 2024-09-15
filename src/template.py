@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('results/analysis.html')
 
 # Route for code review processing
 @app.route('/review-code', methods=['POST'])
@@ -33,3 +33,18 @@ def review_code():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+"""
+Exclusivamente, este Json con el se va a trabajar
+estará poblado por los datos obtenidos del <<submit>> del 
+programador a evaluar y los datos obtenidos de los lineamientos de la empresa
+
+
+
+guideline_code{
+--------
+}
+user_input{
+-------
+}
+"""
