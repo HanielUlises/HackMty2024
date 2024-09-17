@@ -12,7 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.33.0/min/vs/loader.js"></script>
 
     <!-- Link to CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='evaluation_styles.css') }}">
+    <link rel="stylesheet" href="../static/evaluation_styles.css">
 </head>
 <body>
     <div x-data="{ open: true }" x-init="$nextTick(() => {
@@ -77,8 +77,7 @@
     </div>
 
         
-    <script src="{{ url_for('static', filename='app.js') }}"></script> <!-- Correctly reference the JS file -->   
-    <script src="{{ url_for('static', filename='axios_jobTrainer.js') }}"></script> <!-- Correctly reference the JS file -->   
+    <script src="../static/app.js"></script> <!-- Correctly reference the JS file -->   
 
 </body>
 </html>
