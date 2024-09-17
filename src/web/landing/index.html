@@ -10,25 +10,18 @@
     <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.33.0/min/vs/loader.js"></script>
 
     <!-- Link to CSS -->
-    <link rel="stylesheet" href="../static/evaluation_styles.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div x-data="{ openMenu: false }" class="landing-page-container">
         <!-- Navigation bar -->
         <header class="header">
             <div class="logo">
-                <img src="icons/logo.svg" alt="Coding Challenge Platform Logo">
+                <img src="../icons/logo.svg" alt="Coding Challenge Platform Logo">
             </div>
-            <nav class="nav-bar">
-                <ul>
-                    <li><a href="/about">About</a></li>
-                    <li><a href="/features">Features</a></li>
-                    <li><a href="/contact">Contact</a></li>
-                </ul>
-            </nav>
             <div class="nav-toggle">
                 <button @click="openMenu = !openMenu" class="menu-btn">
-                    <img src="icons/menu-icon.svg" alt="Menu Icon">
+                    <img src="../icons/menu-icon.svg" alt="Menu Icon">
                 </button>
             </div>
         </header>
@@ -47,10 +40,10 @@
             <div class="hero-content">
                 <h1>Welcome to the Coding Challenge Platform</h1>
                 <p>Test your coding skills with interactive challenges, submit your solutions, and receive instant feedback. Level up your skills today!</p>
-                <a href="evaluation.html" class="start-btn">Start Coding</a>
+                <a href="../evaluation/evaluation.html" class="start-btn">Start Coding</a>
             </div>
             <div class="hero-image">
-                <img src="icons/coding_hero_image.svg" alt="Coding Illustration">
+                <img src="../icons/coding_hero_image.svg" alt="Coding Illustration">
             </div>
         </section>
 
@@ -59,17 +52,17 @@
             <h2>Why Choose Us?</h2>
             <div class="features">
                 <div class="feature-item">
-                    <img src="icons/instant-feedback.svg" alt="Instant Feedback Icon">
+                    <img src="../icons/instant-feedback.svg" alt="Instant Feedback Icon">
                     <h3>Instant Feedback</h3>
                     <p>Get real-time feedback as soon as you submit your code, helping you improve quickly.</p>
                 </div>
                 <div class="feature-item">
-                    <img src="icons/challenges.svg" alt="Challenges Icon">
+                    <img src="../icons/challenges.svg" alt="Challenges Icon">
                     <h3>Variety of Challenges</h3>
                     <p>Explore challenges across different levels and languages.</p>
                 </div>
                 <div class="feature-item">
-                    <img src="icons/community.svg" alt="Community Icon">
+                    <img src="../icons/community.svg" alt="Community Icon">
                     <h3>Collaborative Community</h3>
                     <p>Join a community of coders, share knowledge, and grow together.</p>
                 </div>
@@ -79,7 +72,7 @@
         <!-- Call to Action -->
         <section class="cta-section">
             <h2>Ready to sharpen your coding skills?</h2>
-            <a href="evaluation.html" class="cta-btn">Start Your Challenge Now</a>
+            <a href="../evaluation/evaluation.html" class="cta-btn">Start Your Challenge Now</a>
         </section>
 
         <!-- Footer -->
@@ -97,6 +90,6 @@
     </div>
 
     <!-- Include external JavaScript files -->
-    <script src="../static/landing.js"></script>
+    <script src="landing.js"></script>
 </body>
 </html>
