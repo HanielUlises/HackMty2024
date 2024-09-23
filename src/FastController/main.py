@@ -1,7 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+import asyncio
 
+
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..","controlers","jobTrainer")))
+from JobTrainer import JobTrainer
+from SummarizeCompany import SummarizeCompany
 app = FastAPI()
 
 # List of allowed origins (your frontend URL)
@@ -23,10 +30,42 @@ class Message(BaseModel):
 
 @app.post("/api/echo")
 async def problem_desctiption(message: Message):
+    import time
+    start_time = time.time()
+
+
+    # #Process to generate the problem
+    train = SummarizeCompany() # ~1 seg
+    context = await train.relevantIdeas("You are a text analyst. You have to extract the main ideas from the following text:")
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print(f"Elapsed time: {elapsed_time}")
     
-    #Process to generate the problem
+    print("Extracted context")
     
-    return {"message": f"Echo: {message.text}"}
+    trainer = JobTrainer()
+    # prompt = "You are a trainer in a company who teaches newly hired employees. For their introduction, you ask them to solve a problem based on the context of the company. The context is as follows:"
+    promtp2 = "You are a trainer in a company who teaches newly hired employees. For their introduction, you ask them to solve a programming problem about other programming code fragment. The programming code fragment is as follows:"
+
+    problem = await trainer.generate_problem(context, promtp2)
+    print("generated problem")
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print(f"Elapsed time: {elapsed_time}")
+    
+    guideline_code = await trainer.generate_code(context,promtp2,problem)
+    
+    print("generated guideline code")
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print(f"Elapsed time: {elapsed_time}")
+    
+    
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print(f"Elapsed time: {elapsed_time}")
+    
+    return {"message": f"Echo: {problem}"}
 
 @app.post("/api/other-endpoint")
 async def compare_response(message: Message):

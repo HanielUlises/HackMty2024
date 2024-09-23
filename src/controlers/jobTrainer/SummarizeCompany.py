@@ -1,5 +1,9 @@
 from openai import OpenAI
 import data_base_handler as dbh
+import httpx
+
+
+
 #from transformers import pipeline
 class Client:
     def __init__(self):
@@ -27,27 +31,34 @@ class SummarizeCompany:
     #   reSum = pipeline("summarization", model="Falconsai/text_summarization")
     #   print(reSum)
 
-    def relevantIdeas(self, promt):
-        conection = dbh.connect_to_company_information(dbh.DATA_BASE_URI)
-
-        for document in conection.find():
-            directory_name = document.get("directory")
-            file_name = document.get("file_name")        
-            self.file_text = document.get("content")
-
-            response = self.client.chat.completions.create(
-                model="tgi",
-                messages=[
-                {"role": "system", "content": promt + self.file_text[:500]}
-                ],stream=False
-            )
-            pattern_idea=response.choices[0].message.content
-            self.pattern_or_ideas+=pattern_idea
-            break
-        print(pattern_idea)
-        return self.pattern_or_ideas
-        #self.ReSummarize()
-    
+    async def relevantIdeas(self, promt):
+        
+        
+            conection = dbh.connect_to_company_information(dbh.DATA_BASE_URI)
+            document = conection.find_one() # Fetch one document directly to avoid looping
+            
+            if document: 
+                self.file_text = document.get("content")
+                
+                try:
+                
+                    async with httpx.AsyncClient(timeout=30.0) as client:
+                        response = await client.post(
+                        url="http://198.145.126.109:8080/v1/chat/completions",
+                        json={
+                            "model":"tgi",
+                            "messages":[{"role": "system", "content": promt + self.file_text[:500]}],
+                            "stream":False    
+                        }
+                        )
+                        pattern_idea = response.json()["choices"][0]["message"]["content"]
+                        self.pattern_or_ideas += pattern_idea
+                    return self.pattern_or_ideas
+            
+                except httpx.ReadTimeout:
+                    return "Error: the equest to the API timed out"
+                except Exception as e:
+                    return f"Error generating code: {str(e)}"
 
 #PROMTS
 #You are a text analyst. You have to extract the main ideas from the following text:

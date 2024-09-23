@@ -1,0 +1,24 @@
+**Code Analysis Problem Statement: Configuring a JavaScript Linter**
+=================================================================
+
+As a trainer, I would give the following problem to new employees:
+
+**Problem:**
+
+Create a JavaScript configuration file for a linter that enforces certain coding standards. The configuration should include rules for the following:
+
+**Required Coding Practices:**
+
+1. **Curly Braces around Blocks**: Always use curly braces around blocks in loops and conditionals.
+2. **Exception for `== null` Comparisons**: Grant an exception for using `== null` comparisons.
+3. **Parentheses for Immediate Invocations**: Use parentheses for immediate invocations.
+
+**Prohibited/Discouraged Practices:**
+
+1. **No Alert**: Discourage the use of `alert()` functions.
+2. **No Console Log**: Discourage the use of `console.log()` functions in production code.
+3. **No Unused Variables**: Prohibit the declaration of unused variables.
+
+**Linting and Analysis Tools:**
+
+Some popular linting

@@ -5,16 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Coding Challenge Platform</title>
 
+    <!-- Load the Marked library first -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+
+
     <!-- Include Alpine.js -->
     <script src="https://unpkg.com/alpinejs" defer></script>
 
-    <!-- Include Monaco Editor -->
+    <!-- Include Monaco Editor (using AMD loader) -->
     <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.33.0/min/vs/loader.js"></script>
 
     <!-- Link to CSS -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    
     <div x-data="{ open: true }" x-init="$nextTick(() => {
         document.querySelector('.app-container').classList.remove('no-transition');
         document.querySelector('.editor-container').classList.remove('no-transition');
@@ -45,11 +51,15 @@
 
         <!-- Main Content -->
         <div class="main-container">
-            <!-- Col 1: Code Explanation -->
+            <!-- Column for Problem Description -->
             <div class="columnExplanation">
+                <button class="submit-btn" id="refresh-btn"> 
+                    <img src="../icons/regenerate-icon.svg" alt="Icon">
+                </button>
                 <header>
                     <h1>Coding Challenge</h1>
                     <p>Solve coding exercises, submit your solutions, and get instant feedback.</p>
+                    <div id="problem_description"></div>
                 </header>
             </div>
 
@@ -58,7 +68,7 @@
                 <div class="language-selector">
                     <label for="language">Choose Language: </label>
                     <div class="dropdown-button-container">
-                        <select id="language" onchange="changeLanguage()">
+                        <select id="language">
                             <option value="javascript">JavaScript</option>
                             <option value="python">Python</option>
                             <option value="html">HTML</option>
@@ -76,8 +86,7 @@
         </div>
     </div>
 
-        
-    <script src="../static/app.js"></script> <!-- Correctly reference the JS file -->   
-
+    <!-- Load custom JS script after DOM is ready -->
+    <script type="module" src="app.js" defer></script>  
 </body>
 </html>

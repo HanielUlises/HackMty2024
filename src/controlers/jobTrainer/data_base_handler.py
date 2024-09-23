@@ -6,7 +6,7 @@ from pinecone import Pinecone
 
 from openai import OpenAI
 
-DATA_BASE_URI = "mongodb+srv://losCaris:k3sqwhuHtS8q1rKI@datacompany.hhzul.mongodb.net/?retryWrites=true&w=majority&appName=DataCompany"
+DATA_BASE_URI = "mongodb+srv://User:user@datacompany.hhzul.mongodb.net/?retryWrites=true&w=majority&appName=DataCompany"
 
 def init_pinecone():
   # Inicializar Pinecone con tu API Key

@@ -363,3 +363,14 @@ h1, h2 {
         margin-top: 20px;
     }
 }
+
+
+
+#problem_desctription{
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background-color: #2980b9;
+    scroll-behavior: smooth;
+}

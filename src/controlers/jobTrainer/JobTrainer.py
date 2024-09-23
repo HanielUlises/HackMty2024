@@ -5,8 +5,8 @@ import data_base_handler as dbh
 from sentence_transformers import SentenceTransformer
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
-tokenizer = AutoTokenizer.from_pretrained("ibm/PowerLM-3b")
-model = AutoModelForCausalLM.from_pretrained("ibm/PowerLM-3b")
+
+import httpx
 
 class JobTrainer:
     def __init__(self):
@@ -14,10 +14,8 @@ class JobTrainer:
         self.client = conections.client
         self.index = conections.index
         self.mongo = conections.mongo
-        self.model = SentenceTransformer('sentence-transformers/paraphrase-MiniLM-L6-v2')
+        
 
-        self.tokenizer = AutoTokenizer.from_pretrained("ibm/PowerLM-3b")
-        self.lm_model = AutoModelForCausalLM.from_pretrained("ibm/PowerLM-3b")
 
     def review_code(self, guideline_code, user_code):
         """Review the provided user code against guideline code and provide analysis."""
@@ -42,49 +40,69 @@ class JobTrainer:
         except Exception as e:
             return f"Error during code review: {str(e)}"
 
-    def generate_problem(self, context, prompt):
-        """Generate a problem for a new employee based on the context using PowerLM-3b."""
+    async def generate_problem(self, context, prompt):
+        """Generate a problem for a new employee based on the context using Frida API."""
         try:
             # Combine the context and prompt
             input_text = prompt + context + " Tell me what problem you would give to the new employee. And list each potential guideline that the code must meet."
             
-            # Tokenize the input text
-            inputs = self.tokenizer(input_text, return_tensors="pt")
+            
+            #We send the request to the frida API
+            
+            async with httpx.AsyncClient(timeout=30) as client:
+                response = await client.post(
+                    url="http://198.145.126.109:8080/v1/chat/completions",  # Assuming this is your Frida endpoint
+                    json={
+                            "model": "tgi",  # Specify the model used in Frida, e.g., tgi or another LLM
+                            "messages": [
+                                {"role": "system", "content": input_text}
+                            ],
+                            "max_tokens": 200,  # Similar to the `max_length` you used before
+                            "temperature": 1,    # You can adjust this depending on the variability of responses
+                            "stream": False
+                        }
+                )
+                
+            problem = response.json()["choices"][0]["message"]["content"]
 
-            # Generate the response from the model
-            outputs = self.lm_model.generate(**inputs, max_length=500, do_sample=True, temperature=0.7)
-
-            # Decode the generated tokens back into a string
-            problem = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
 
             return problem
-
+        
+        except httpx.ReadTimeout:
+            return "Error: The request to the API timed out."
         except Exception as e:
-            return f"Error generating problem: {str(e)}"
+            return f"Error generating problem {str(e)}"
+
 
     
-    def generate_code(self, context, prompt, problem):
+    async def generate_code(self, context, prompt, problem):
         try:
-            response = self.client.chat.completions.create(
-                model="tgi",
-                messages=[
-                    {"role": "system", "content": "Check this problem statement and generate code based on it: \n" + problem +
-                    "\n\nMake sure to generate a complete and functional code snippet, without cutting off or omitting parts."}
-                ],
-                max_tokens=1000, 
-                stream=False
-            )
+            async with httpx.AsyncClient(timeout=30.0) as client:
             
-            code = response.choices[0].message.content
 
-            # Writing the code to a file to avoid truncation
-            with open("generated_code_output.txt", "w") as file:
-                file.write(code)
-
-            return code
-
+                response = await client.post(
+                    url="http://198.145.126.109:8080/v1/chat/completions",
+                    json= {
+                        "model":"tgi",
+                        "messages":[
+                            {"role": "system", "content": "Check this problem statement and generate code based on it: \n" + problem +
+                            "\n\nMake sure to generate a complete and functional code snippet, without cutting off or omitting parts."}
+                        ],
+                        "max_tokens":200, 
+                        "stream":False
+                    }
+                    
+                    
+                    
+                )
+                
+                code = response.json()["choices"][0]["message"]["content"]
+                return code
+        
+        except httpx.ReadTimeout:
+            return "Error: The request to the API timed out"
         except Exception as e:
-            return f"Error generating code: {str(e)}"
+            return f"Error generating code: {str(e)}"    
 
 
 
@@ -116,44 +134,44 @@ class JobTrainer:
             return f"Error answering question: {str(e)}"
 
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
 
-    train = SummarizeCompany()
+    # train = SummarizeCompany()
     
-    context = train.relevantIdeas("You are a text analyst. You have to extract the main ideas from the following text:")
+    # context = train.relevantIdeas("You are a text analyst. You have to extract the main ideas from the following text:")
     
-    trainer = JobTrainer()
+    # trainer = JobTrainer()
 
-    prompt = "You are a trainer in a company who teaches newly hired employees. For their introduction, you ask them to solve a problem based on the context of the company. The context is as follows:"
-    promtp2 = "You are a trainer in a company who teaches newly hired employees. For their introduction, you ask them to solve a programming problem about other programming code fragment. The programming code fragment is as follows:"
-    problem = trainer.generate_problem(context, promtp2)
-    guideline_code = trainer.generate_code(context,promtp2,problem)
+    # prompt = "You are a trainer in a company who teaches newly hired employees. For their introduction, you ask them to solve a problem based on the context of the company. The context is as follows:"
+    # promtp2 = "You are a trainer in a company who teaches newly hired employees. For their introduction, you ask them to solve a programming problem about other programming code fragment. The programming code fragment is as follows:"
+    # problem = trainer.generate_problem(context, promtp2)
+    # guideline_code = trainer.generate_code(context,promtp2,problem)
 
-    print (problem)
-    print (guideline_code)
+    # print (problem)
+    # print (guideline_code)
 
-    user_code = """```javascript
-        // Function to calculate the area of a rectangle
-        /**
-        * Calculates the area of a rectangle.
-        * 
-        * @param {number} width The width of the rectangle.
-        * @param {number} height The height of the rectangle.
-        * @returns {number} The area of the rectangle.
-        */
-        function calculateArea(width, height) {
-        // Variable to store the calculated area
-        let area = width * height;
-        return area;
-        }
+    # user_code = """```javascript
+    #     // Function to calculate the area of a rectangle
+    #     /**
+    #     * Calculates the area of a rectangle.
+    #     * 
+    #     * @param {number} width The width of the rectangle.
+    #     * @param {number} height The height of the rectangle.
+    #     * @returns {number} The area of the rectangle.
+    #     */
+    #     function calculateArea(width, height) {
+    #     // Variable to store the calculated area
+    #     let area = width * height;
+    #     return area;
+    #     }
 
-        // Variable declaration with let for block"""
+    #     // Variable declaration with let for block"""
 
-    review = trainer.review_code(guideline_code, user_code)
+    # review = trainer.review_code(guideline_code, user_code)
 
-    print("Problem:")
-    print(problem)
-    print("\nGenerated Code:")
-    print(guideline_code)
-    print("\nReview Result:")
-    print(review)
+    # print("Problem:")
+    # print(problem)
+    # print("\nGenerated Code:")
+    # print(guideline_code)
+    # print("\nReview Result:")
+    # print(review)

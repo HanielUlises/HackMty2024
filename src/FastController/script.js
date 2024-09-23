@@ -10,11 +10,16 @@ async function send_problem_description() {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ text: "Message from API 1" })
+        body: JSON.stringify({ text: "idk" })
     });
 
     const data = await response.json();
-    document.getElementById("response1").innerText = data.message;
+
+    //We return the message retrieved from the API 
+
+    return data.message
+
+
 }
 
 async function send_compare_response() {
@@ -42,3 +47,7 @@ async function send_chat_response() {
     const data = await response.json();
     document.getElementById("response3").innerText = data.message;
 }
+
+
+
+export default {send_problem_description}
